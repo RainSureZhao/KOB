@@ -1,10 +1,18 @@
 <template>
-    <div class="playground"> </div>
-</template>
+    <div class="playground"> 
+        <GameMap>
+
+        </GameMap>
+    </div>
+</template> 
 
 <script>
+import GameMap from './GameMap.vue';
 export default {
     name: "PlayGround",
+    components: {
+        GameMap,
+    }
 }
 </script>
 

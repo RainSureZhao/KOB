@@ -1,7 +1,7 @@
 <template>
-    <!-- <ContentField>
+    <ContentField>
         对战
-    </ContentField> -->
+    </ContentField>
     <PlayGround>
         
     </PlayGround>
