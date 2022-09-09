@@ -23,7 +23,7 @@
                         <li><router-link class="dropdown-item" :to="{name: 'user_bot_index'}">我的Bot</router-link></li>
                         <li><a class="dropdown-item" href="#">我的信息</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"> 退出登录 </a></li>
+                        <li><a class="dropdown-item" href="#" @click="logout"> 退出登录 </a></li>
                     </ul>
                 </li>
             </ul>
@@ -46,13 +46,21 @@
 
 <script>
 import { useRoute } from 'vue-router';
-import { computed } from 'vue'; 
+import { computed } from 'vue';
+import { useStore } from 'vuex'; 
+import router from '@/router';
 export default {
     setup() {
         const route = useRoute();
         let route_name = computed(() => route.name);
+        const store = useStore();
+        const logout = () => {
+            store.dispatch("logout");
+            router.push({name: "user_account_login"});
+        };
         return{
             route_name,
+            logout
         }
     }
 }
