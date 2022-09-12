@@ -14,7 +14,7 @@
                     <div class="error-message ">{{error_message}}</div>
                     <button type="submit" class="btn btn-primary">提交</button>
                 </form>
-            </div>
+            </div> 
         </div>
     </ContentField>
 </template>
