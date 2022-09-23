@@ -12,6 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Player {
     private Integer id;
+
+    private Integer botId;  // -1表示人工
+
+    private String botCode;
     private Integer sx;
     private Integer sy;
     private List<Integer> steps;
@@ -40,7 +44,6 @@ public class Player {
                 res.remove(0);
             }
         }
-
         return res;
     }
 

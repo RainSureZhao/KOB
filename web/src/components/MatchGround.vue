@@ -13,6 +13,14 @@
           <div class="vs-photo">
             <img src="@/assets/images/VS.webp" alt="">
           </div>
+        <div class="user-select-bot">
+          <select v-model="select_bot" class="form-select" aria-label="Default select example">
+            <option selected value="-1"> 亲自出马 </option>
+            <option v-for="bot in bots" :key="bot.id"  :value="bot.id">
+              {{ bot.title }}
+            </option>
+          </select>
+        </div>
       </div>
       <div class="col-5">
         <div class="user-photo">
@@ -32,17 +40,33 @@
 <script>
 import { ref } from 'vue';
 import {useStore} from "vuex";
+import $ from 'jquery'
 export default {
   name: "MatchGround",
   setup() {
     const store = useStore();
     let match_btn_info = ref("开始匹配");
+    let bots = ref([]);
+    let select_bot = ref("-1");
+    const refresh_bots = () => {
+      $.ajax({
+        url : "http://127.0.0.1:3000/user/bot/getlist/",
+        type: "get",
+        headers: {
+          Authorization: "Bearer " + store.state.user.token
+        },
+        success(resp) {
+          bots.value = resp;
+        }
+      })
+    };
 
     const click_match_btn = () => {
       if(match_btn_info.value === "开始匹配") {
         match_btn_info.value = "取消";
         store.state.pk.socket.send(JSON.stringify({
           event: "start-matching",
+          bot_id: select_bot.value,
         }));
       }else {
         match_btn_info.value = "开始匹配";
@@ -51,10 +75,12 @@ export default {
         }));
       }
     }
-
+    refresh_bots();
     return {
       match_btn_info,
-      click_match_btn
+      click_match_btn,
+      bots,
+      select_bot,
     }
   }
 }
@@ -93,5 +119,8 @@ div.vs-photo {
 }
 div.vs-photo > img {
   width: 120px;
+}
+div.user-select-bot {
+  margin-top: 20px;
 }
 </style>

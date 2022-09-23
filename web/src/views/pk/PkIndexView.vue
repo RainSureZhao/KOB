@@ -28,6 +28,7 @@ export default{
     components: {MatchGround,  PlayGround, ResultBoard },
     setup() {
         const store = useStore();
+        store.commit("updateLoser", "none");
         store.commit("updateOpponent", {
           username: "First",
           photo: "https://cdn.acwing.com/media/user/profile/photo/51543_lg_4c1d0f5a55.jpg",
