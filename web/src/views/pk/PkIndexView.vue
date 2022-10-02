@@ -29,6 +29,7 @@ export default{
     setup() {
         const store = useStore();
         store.commit("updateLoser", "none");
+        store.commit("updateIsRecord", false);
         store.commit("updateOpponent", {
           username: "First",
           photo: "https://cdn.acwing.com/media/user/profile/photo/51543_lg_4c1d0f5a55.jpg",
@@ -42,6 +43,7 @@ export default{
                 store.commit("updateSocket", socket);
             }
             socket.onmessage = (message) => {
+                // console.log("test get message!!");
                 const data = JSON.parse(message.data);
                 if(data.event === "start-matching") {  // 匹配成功
                   store.commit("updateOpponent", {
@@ -53,7 +55,7 @@ export default{
                   }, 500);
                   store.commit("updateGame", data.game);
                 }else if(data.event === "move") {
-                    console.log(data);
+                    // console.log("test move!!!");
                     const game = store.state.pk.gameObject;
                     const [snake0, snake1] = game.snakes;
                     snake0.set_direction(data.a_direction);
@@ -65,7 +67,7 @@ export default{
                     if(data.loser === "all" || data.loser === "A") {
                       snake0.status = "die";
                     }
-                    if(data.lower === "all" || data.loser === "B") {
+                    if(data.loser === "all" || data.loser === "B") {
                       snake1.status = "die";
                     }
                     store.commit("updateLoser", data.loser);

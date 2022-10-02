@@ -29,7 +29,7 @@ public class WebSocketServer {
 
     private Session session = null;
 
-    private static UserMapper userMapper;
+    public static UserMapper userMapper;
     public static RecordMapper recordMapper;
 
     private static BotMapper botMapper;
@@ -148,11 +148,13 @@ public class WebSocketServer {
 
     private void move(int direction) {
         if(game.getPlayerA().getId().equals(user.getId())) {
-            if(game.getPlayerA().getId().equals(-1)) {
+            // System.out.println(game.getPlayerA().getId());
+            if(game.getPlayerA().getBotId().equals(-1)) { // 亲自出马
                 game.setNextStepA(direction);
             }
         }else if(game.getPlayerB().getId().equals(user.getId())) {
-            if(game.getPlayerB().getId().equals(-1)) {
+            // System.out.println(game.getPlayerA().getId());
+            if(game.getPlayerB().getBotId().equals(-1)) {  // 亲自出马
                 game.setNextStepB(direction);
             }
         }

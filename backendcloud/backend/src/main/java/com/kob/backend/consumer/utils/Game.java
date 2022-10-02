@@ -5,13 +5,11 @@ import com.kob.backend.consumer.WebSocketServer;
 import com.kob.backend.mapper.RecordMapper;
 import com.kob.backend.pojo.Bot;
 import com.kob.backend.pojo.Record;
+import com.kob.backend.pojo.User;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Game extends Thread{
@@ -222,12 +220,12 @@ public class Game extends Thread{
         if(g[cell.x][cell.y] == 1) return false;
 
         for(int i = 0; i < n - 1; i ++) {
-            if(cellsA.get(i).x == cell.x && cellsA.get(i).y == cell.y) {
+            if(Objects.equals(cellsA.get(i).x, cell.x) && Objects.equals(cellsA.get(i).y, cell.y)) {
                 return false;
             }
         }
         for(int i = 0; i < n - 1; i ++) {
-            if(cellsB.get(i).x == cell.x && cellsB.get(i).y == cell.y) {
+            if(Objects.equals(cellsB.get(i).x, cell.x) && Objects.equals(cellsB.get(i).y, cell.y)) {
                 return false;
             }
         }
@@ -236,10 +234,11 @@ public class Game extends Thread{
 
     private void judge() {
         List<Cell> cellsA = playerA.getCells();
-        List<Cell> cellsB  =playerB.getCells();
+        List<Cell> cellsB = playerB.getCells();
 
         boolean validA = check_valid(cellsA, cellsB);
         boolean validB = check_valid(cellsB, cellsA);
+
 
         if(!validA || !validB) {
             status = "finished";
@@ -261,6 +260,7 @@ public class Game extends Thread{
             resp.put("a_direction", nextStepA);
             resp.put("b_direction", nextStepB);
             nextStepA = nextStepB = null;
+            // System.out.println("I 'd like to know what going on?");
             sendAllMessage(resp.toJSONString());
         }finally {
             lock.unlock();
@@ -277,7 +277,25 @@ public class Game extends Thread{
         }
         return res.toString();
     }
+
+    private void updateUserRating(Player player, Integer rating) {
+        User user = WebSocketServer.userMapper.selectById(player.getId());
+        user.setRating(rating);
+        WebSocketServer.userMapper.updateById(user);
+    }
+
     private void saveToDatabase() {
+        Integer ratingA = WebSocketServer.userMapper.selectById(playerA.getId()).getRating();
+        Integer ratingB = WebSocketServer.userMapper.selectById(playerB.getId()).getRating();
+        if("A".equals(loser)) {
+            ratingA -= 2;
+            ratingB += 5;
+        } else if("B".equals(loser)) {
+            ratingB -= 2;
+            ratingA += 5;
+        }
+        updateUserRating(playerA, ratingA);
+        updateUserRating(playerB, ratingB);
         Record record = new Record(
             null,
             playerA.getId(),
