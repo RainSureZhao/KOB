@@ -38,7 +38,7 @@ public class Consumer extends Thread{
     }
 
     private String addUid(String code, String uid) {  // 在code中的Bot类名后增加uid
-        int k = code.indexOf(" implements com.kob.botrunningsystem.utils.BotInterface");
+        int k = code.indexOf(" implements java.util.function.Supplier<Integer>");
         // System.out.println(code.substring(0, k) + uid + code.substring(k));
         return code.substring(0, k) + uid + code.substring(k);
     }
